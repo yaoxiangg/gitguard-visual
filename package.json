@@ -1,0 +1,15 @@
+{
+  "name": "GitGuard",
+  "private": true,
+  "version": "0.0.0",
+  "devDependencies": {
+    "http-server": "^0.9.0"
+  },
+  "scripts": {
+    "prestart": "npm install",
+    "start": "autoreload-server -l=false --default-pages=index.html -d ./app -p 8000"
+  },
+  "dependencies": {
+    "simple-autoreload-server": "^0.2.6"
+  }
+}

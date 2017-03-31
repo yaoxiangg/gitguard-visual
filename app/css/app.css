@@ -1,0 +1,99 @@
+.footer {
+  font-size: small;
+  background-color: #ff6d6d; 
+  padding-top: 40px;
+  padding-bottom: 20px;
+  text-align: center;
+}
+.shield-footer {
+  padding: 5px;
+  margin: auto;
+  max-height: 40px;
+  max-width: 40px;
+}
+
+.header {
+  color: #9E9E9E;
+  text-align: center;
+  padding-top: 20px;
+}
+
+.btn-analyze {
+  text-align: center;
+  bottom: 20px;
+  margin: 10px;
+  margin-top: 30px;
+}
+
+.btn--flat.btn--white {
+  background: #ff6d6d;
+  color: black;
+}
+
+.btn--flat.btn--white:hover {
+  color: white;
+}
+
+body {
+  background-color: #252830;
+}
+
+.graph {
+  width: 500px;
+  height: 250px;
+  padding: 20px;
+  display: inline-block;
+}
+
+.graph-container {
+  width: 580px;
+  height: 300px;
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.checkbox-inline {
+  color: white;
+  display: block;
+  font-size: small;
+}
+
+.checkbox-label {
+  margin-right: 5px;
+  margin-left: 5px;
+  font-size: small;
+}
+
+.legends-box {
+  margin-top: 20px;
+  display: inline;
+  float: right;
+}
+
+.row {
+  margin-left: 0px;
+  margin-right: 0px;
+}
+
+.intro-text {
+  color: #9E9E9E;
+  font-size: large;
+  vertical-align: middle;
+  line-height: 55px;
+}
+
+.intro-header {
+  font-size: 42px;
+  color: #9E9E9E;
+}
+
+.intro {
+  padding-top: 50px;
+  padding-bottom: 100px;
+  width: 50%;
+  margin: auto;
+  margin-bottom: 50px;
+  text-align: center;
+  background: #404344;
+  border-radius: 20px;
+}
