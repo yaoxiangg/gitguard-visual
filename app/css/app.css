@@ -91,9 +91,16 @@ body {
   padding-top: 50px;
   padding-bottom: 100px;
   width: 50%;
+  min-width: 320px;
   margin: auto;
   margin-bottom: 50px;
   text-align: center;
   background: #404344;
   border-radius: 20px;
+}
+
+.graph-loader {
+  height: 400px;
+  padding: 100px;
+  vertical-align: middle;
 }

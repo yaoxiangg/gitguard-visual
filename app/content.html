@@ -3,17 +3,17 @@
     <div class="col-12 col-sm-9 col-lg-10">
       <div class="p+ pt0">
         <lx-text-field lx-theme="dark" lx-label="GitHub Repo URL">
-          <input ng-change="updateRepoUri(git_repo_uri)" ng-model="git_repo_uri" type="text"></input>
+          <input ng-keypress="checkEnter($event)" ng-model="$parent.$parent.git_repo_uri" type="text"></input>
         </lx-text-field>
       </div>
     </div>
     <div class="col-12 col-sm-3 col-lg-2">
       <div class="btn-analyze">
-        <lx-button lx-color="white" lx-type="flat" ng-click="analyze(git_repo_uri)">Analyze</lx-button>
+        <lx-button lx-color="white" lx-type="flat" ng-click="analyze()">Analyze</lx-button>
       </div>
     </div>
   </div>
-  <div class="intro" ng-if="repositories.length <= 0 ">
+  <div class="intro" ng-if="repositories.length <= 0">
     <div class="p+">
       <p class="intro-header">How to Use?</p>
       <lx-icon lx-id="numeric-1-box" lx-size="xl" lx-color="grey" lx-type="flat"></lx-icon><span class="intro-text">Enter Your GitHub Repository</span><br/>
@@ -23,9 +23,12 @@
   <lx-tabs lx-color="black" lx-theme="dark" ng-if="repositories.length > 0" lx-active-tab="activeTab">
     <lx-tab ng-repeat="repo in repositories" lx-label={{repo.title}}>
       <div class="graphs">
+        <div class="graph-loader" ng-if="repo.graphs.length <= 0">
+            <lx-progress lx-color="white" lx-type="circular" lx-diameter="100"></lx-progress>
+        </div>
         <div class="graph-container" ng-repeat="graph in repo.graphs">
           <div class="graph">
-            <canvas class="chart chart-line" chart-data=graph.data chart-labels=graph.labels chart-series=graph.series chart-click="onClick"></canvas> 
+            <canvas class="chart chart-base" chart-type="graph.chart_type" chart-data=graph.data chart-labels=graph.labels chart-series=graph.series chart-click="onClick"></canvas> 
           </div>
           <div class="legends-box">
             <label class="checkbox-inline" ng-repeat="legend in graph.actual_series"><input ng-click="graph.toggleSeries($index)" ng-model=graph.legend_status[$index] class="checkbox-label" type="checkbox" value="">{{legend}}</label>

@@ -5,6 +5,7 @@ app.factory('ChartFactory', function() {
       chart.shown_amt = 0;
       chart.data = data;
       chart.labels = labels;
+      chart.chart_type = "line";
       chart.series = series;
       chart["actual_data"] = data || [
         [65, 59, 80, 81, 56, 55, 40],

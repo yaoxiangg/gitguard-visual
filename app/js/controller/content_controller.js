@@ -2,16 +2,20 @@ app.controller('ContentController', function($scope, LxNotificationService, Char
   $scope.git_repo_uri = "";
   $scope.repositories = [];
   $scope.activeTab = 0;
-  $scope.analyze = function(uri) {
+  $scope.checkEnter = function(keyEvent) {
+    if (keyEvent.which === 13)
+      $scope.analyze();
+  };
+  $scope.analyze = function() {
+    var uri = $scope.git_repo_uri.trim();
     if (uri != "") {
       var repo = RepoFactory.createRepository(uri, uri);
+      $scope.git_repo_uri = "";
       $scope.repositories.push(repo);
+      $scope.activeTab = $scope.repositories.length - 1;
+      setTimeout(function() { repo.loadGraphs(); $scope.$apply(); }, 3000);
     } else {
       LxNotificationService.error('Please enter a Git Repository URL!');
     }
   }
-  $scope.updateRepoUri = function(uri) {
-    $scope.git_repo_uri = uri;
-  };
-
 });
