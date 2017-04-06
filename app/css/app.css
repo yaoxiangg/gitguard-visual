@@ -104,3 +104,7 @@ body {
   padding: 100px;
   vertical-align: middle;
 }
+
+.tabs__link > span {
+  vertical-align: top;
+}

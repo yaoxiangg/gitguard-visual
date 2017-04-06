@@ -2,7 +2,7 @@
   <div class="row">
     <div class="col-12 col-sm-9 col-lg-10">
       <div class="p+ pt0">
-        <lx-text-field lx-theme="dark" lx-label="GitHub Repo URL">
+        <lx-text-field lx-theme="dark" lx-label="Enter a GitHub Repo URL">
           <input ng-keypress="checkEnter($event)" ng-model="$parent.$parent.git_repo_uri" type="text"></input>
         </lx-text-field>
       </div>
@@ -21,7 +21,7 @@
     </div>
   </div>
   <lx-tabs lx-color="black" lx-theme="dark" ng-if="repositories.length > 0" lx-active-tab="activeTab">
-    <lx-tab ng-repeat="repo in repositories" lx-label={{repo.title}}>
+    <lx-tab class="chart-tab" lx-icon="chart-areaspline" ng-repeat="repo in repositories" lx-label={{repo.title}}>
       <div class="graphs">
         <div class="graph-loader" ng-if="repo.graphs.length <= 0">
             <lx-progress lx-color="white" lx-type="circular" lx-diameter="100"></lx-progress>
