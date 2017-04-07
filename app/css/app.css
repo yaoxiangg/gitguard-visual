@@ -108,3 +108,21 @@ body {
 .tabs__link > span {
   vertical-align: top;
 }
+.table-dark {
+  font-size: small;
+  color: #fff;
+  background-color: #252830;
+}
+.table td {
+  padding: 0.5rem;
+}
+
+.table-title {
+  color: white;
+  font-weight: 900;
+  text-align: center;
+  padding-bottom: 20px;
+}
+.graph-table {
+  position: absolute;
+}

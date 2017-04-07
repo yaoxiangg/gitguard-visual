@@ -1,8 +1,11 @@
 app.factory('ChartFactory', function() {
   return {
-    createChart : function(data, labels, series, chart_type, only_one_series_active) {
+    createChart : function(title, data, labels, series, chart_type, only_one_series_active) {
       var chart = {};
+      chart.title = title;
       chart.shown_amt = 0;
+      chart.is_table = 0;
+      chart.show_legend = 1;
       chart.data = data;
       chart.labels = labels;
       chart.chart_type = chart_type || "line";
@@ -61,6 +64,32 @@ app.factory('ChartFactory', function() {
           break;
         }
       }
+      return chart;
+    },
+    createDataTable : function(title, data, labels, series, only_one_series_active) {
+      var chart = {};
+      chart.title = title;
+      chart.shown_amt = 0;
+      chart.is_table = 1;
+      chart.show_legend = 0;
+      chart.data = data;
+      chart.labels = labels;
+      chart["actual_data"] = data || [
+        [65, 59, 80, 81, 56, 55, 40],
+        [35, 39, 30, 31, 36, 35, 30],
+        [28, 48, 40, 19, 86, 27, 90]
+      ];
+      chart["labels"] = labels || ["January", "February", "March", "April", "May", "June", "July"];
+        chart["actual_series"] = series || ['Series A', 'Series B', 'Series C'];
+
+      chart["data"] = chart["actual_data"];
+      if (!only_one_series_active) {
+        chart["series"] = chart["actual_series"];
+      } else {
+        chart["series"] = null;
+        chart["data"] = chart["actual_data"][0];
+      }
+      chart["legend_status"] = {};
       return chart;
     }
   }

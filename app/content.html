@@ -28,9 +28,16 @@
         </div>
         <div class="graph-container" ng-repeat="graph in repo.graphs">
           <div class="graph">
-            <canvas class="chart chart-base" chart-type="graph.chart_type" chart-data=graph.data chart-labels=graph.labels chart-series=graph.series chart-click="onClick"></canvas> 
+            <canvas class="chart chart-base" ng-if="!graph.is_table" chart-type="graph.chart_type" chart-data=graph.data chart-labels=graph.labels chart-series=graph.series chart-click="onClick"></canvas> 
+            <div class="graph-table" ng-if="graph.is_table">
+              <table class="table table-dark">
+                <div class="table-title">{{graph.title}}</div>
+                <thead><tr><th ng-repeat="label in graph.labels">{{label}}</th></tr></thead>
+                <tbody><tr ng-repeat="data in graph.data"><td ng-repeat="cell in data">{{cell}}</td></tr></tbody>
+              </table>
+            </div>
           </div>
-          <div class="legends-box">
+          <div class="legends-box" ng-if="graph.show_legend">
             <label class="checkbox-inline" ng-repeat="legend in graph.actual_series"><input ng-click="graph.toggleSeries($index)" ng-model=graph.legend_status[$index] class="checkbox-label" type="checkbox" value="">{{legend}}</label>
           </div>
         </div>
