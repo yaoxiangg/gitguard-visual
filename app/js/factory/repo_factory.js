@@ -1,22 +1,25 @@
-app.factory('RepoFactory', function($http, ChartFactory){
+//Repository Factory
+app.factory('RepoFactory', function($http, ChartFactory, DataService){
   return {
-    createRepository : function(url, title) {
-      return new Repository(url, title, ChartFactory);
+    createRepository : function(user, repo) {
+      return new Repository(user, repo, user + "/" + repo, ChartFactory, DataService);
     }
   }
 });
 
-function Repository(url, title, ChartFactory) {
-      this.url = url;
+//Repository Object
+function Repository(user, repo, title, ChartFactory, DataService) {
+      this.user = user;
+      this.repo = repo;
       this.title = title || "Unknown";
       this.graphs = [];
 
-      this.loadContributionGraph = function(c_type) {
-          var result = '{"contributions": [{"member": "John","commits": 10,"insertions": 280,"deletions": 100},{"member": "May","commits": 20,"insertions": 100,"deletions": 200},{"member": "Mary","commits": 2,"insertions": 20,"deletions": 175}]}';
-          var json_res = JSON.parse(result);
+      this.loadContributionGraph = function(graphs, c_type) {
+          var graph = {};
+          DataService.getContributions(user, repo).then(function(d){
+          var json_res = d;
           var title = "Total Contributions";
           var type = c_type || "pie";
-          var graph = {};
           var data = [];
           var series = ["Commits", "Deletions", "Insertions"];
           var labels = [];
@@ -32,53 +35,101 @@ function Repository(url, title, ChartFactory) {
           data.push(commits);
           data.push(deletions);
           data.push(insertions);
-          graph = ChartFactory.createChart(title, data, labels, series, type, true);
-          this.graphs.push(graph);
+          graph.content = ChartFactory.createChart(title, data, labels, series, type, true);
+          graph.tab = 0;
+          graphs.push(graph);
+          }); 
       }
 
-      this.loadTeamCommitHistoryGraph = function() {
-          var result = '{"interval": "month","labels": ["01-01-17", "02-01-17", "03-01-17", "04-01-17"],"history": [{"member": "John","commits": [0, 1, 0, 10]},{"member": "May","commits": [2, 1, 1, 0]},{"member": "Mary","commits": [3, 1, 5, 10]}]}'
-          var json_res = JSON.parse(result);
-          var title = "Team Commit History";
+      this.loadFinalLinesGraph = function(graphs, c_type) {
           var graph = {};
+          DataService.getLinesFinal(user, repo).then(function(d){
+          var json_res = d;
+          var title = "Total Lines (Final)";
+          var type = c_type || "pie";
           var data = [];
-          var series = [];
-          var labels = json_res.labels;
-          for (i = 0; i < json_res.history.length; i++) {
-            series.push(json_res.history[i].member);
-            data.push(json_res.history[i].commits);
+          var series = ["Lines"];
+          var labels = [];
+          var lines = [];
+          for (i = 0; i < json_res.length; i++) {
+            lines.push(json_res[i].lines);
+            labels.push(json_res[i].name);
           }
-          graph = ChartFactory.createChart(title, data, labels, series, "bar", false);
-          this.graphs.push(graph);
+          data.push(lines);
+          graph.content = ChartFactory.createChart(title, data, labels, series, type, true);
+          graph.content.show_legend = 0;
+          graph.content.options = {legend: {display: false}};
+          graph.tab = 3;
+          graphs.push(graph);
+          }); 
       }
 
-      this.loadFileCommitHistoryGraph = function() {
-          var result = '{"filename": "/asda/adad.js", "history": [{"message": "Commit Message 1","member": "May"},{"message": "Commit Message 2","member": "John"},{"message": "Commit Message 3","member": "John"}]}';
-          var json_res = JSON.parse(result);
-          var title = "Commit History - " + json_res.filename;
+      this.loadTeamCommitHistoryGraph = function(graphs, interval, datestart, dateend) {
           var graph = {};
-          var data = [];
-          var series = [];
-          var labels = ["Message", "Member"];
-          for (i = 0; i < json_res.history.length; i++) {
-            data.push([json_res.history[i].message, json_res.history[i].member]);
-            series.push("Commit " + i);
-          }
-          graph = ChartFactory.createDataTable(title, data, labels, series, false);
-          this.graphs.push(graph);
+          graph.startdate = new Date();
+          graph.enddate = graph.startdate;
+          graph.tab = 1;
+          graph.hasStartDate = 1;
+          graph.hasEndDate = 1;
+
+          graph.refresh = function(add) {
+            if (graph.startdate != graph.enddate) {
+              datestart = moment(graph.startdate).locale('en').format('DDMMYY');
+              dateend = moment(graph.enddate).locale('en').format('DDMMYY');
+            }
+            interval = "week";
+            member = null;
+            DataService.getTeamCommitHistory(user, repo, member, interval, datestart, dateend).then(function(d){
+              var json_res = d;
+              var title = "Team Commit History";
+              var data = [];
+              var series = [];
+              var labels = json_res.labels;
+              for (i = 0; i < json_res.history.length; i++) {
+                series.push(json_res.history[i].member);
+                data.push(json_res.history[i].commits);
+              }
+              graph.content = ChartFactory.createChart(title, data, labels, series, "bar", false);
+              graph.content.show_legend = 0;
+              if (add) {
+                graphs.push(graph);
+              }
+            });
+          };
+          graph.refresh(true);
+      }
+
+      this.loadFileCommitHistoryGraph = function(graphs) {
+          var graph = {};
+          graph.hasUpdateChart = 1;
+          graph.tab = 2;
+          graph.filepath = "";
+          graph.hasFileName = 1;
+          graph.refresh = function(add) {
+            var fp = graph.filepath;
+            var sline = graph.startline;
+            var eline = graph.endline;
+            DataService.getFileCommitHistory(user, repo, fp, sline, eline).then(function(d){
+              var json_res = d;
+              var title = "Commit History - " + json_res.filename;
+              var data = [];
+              var series = [];
+              var labels = ["Message", "Member"];
+              for (i = 0; i < json_res.history.length; i++) {
+                data.push([json_res.history[i].message, json_res.history[i].member]);
+                series.push("Commit " + i);
+              }
+              graph.content = ChartFactory.createDataTable(title, data, labels, series, false);
+            });
+          };
+          graphs.push(graph);
       }
 
       this.loadGraphs = function() {
-          this.loadContributionGraph();
-          this.loadTeamCommitHistoryGraph();
-          this.loadFileCommitHistoryGraph();
-          var graph = {};
-          graph = ChartFactory.createChart("Title", null,null,null,"bar" ,false);
-          this.graphs.push(graph);
-          graph2 = ChartFactory.createChart();
-          this.graphs.push(graph2);
-          graph3 = ChartFactory.createChart();
-          this.graphs.push(graph3);
+          this.loadContributionGraph(this.graphs);
+          this.loadTeamCommitHistoryGraph(this.graphs);
+          this.loadFileCommitHistoryGraph(this.graphs);
+          this.loadFinalLinesGraph(this.graphs, "bar");
       };
 
 };

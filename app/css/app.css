@@ -39,16 +39,13 @@ body {
 }
 
 .graph {
-  width: 500px;
-  height: 250px;
+  width: 90%;
   padding: 20px;
   display: inline-block;
 }
 
 .graph-container {
-  width: 580px;
-  height: 300px;
-  display: inline-block;
+  width: 100%;
   margin-right: 20px;
 }
 
@@ -108,11 +105,13 @@ body {
 .tabs__link > span {
   vertical-align: top;
 }
+
 .table-dark {
   font-size: small;
   color: #fff;
   background-color: #252830;
 }
+
 .table td {
   padding: 0.5rem;
 }
@@ -123,6 +122,22 @@ body {
   text-align: center;
   padding-bottom: 20px;
 }
-.graph-table {
-  position: absolute;
+
+.sidebar > .tabs__links {
+  display: block;
+  width: 100%;
+}
+
+.sidebar {
+  margin-bottom: 40px;
+}
+
+.graph-title {
+  color: #ffffff;
+  text-align: center;
+}
+
+.btn-update-chart {
+  margin-bottom: 30px;
+  margin-top: 10px;
 }
