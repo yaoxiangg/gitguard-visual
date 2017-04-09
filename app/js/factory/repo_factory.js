@@ -16,10 +16,27 @@ function Repository(user, repo, title, ChartFactory, DataService) {
 
       this.loadContributionGraph = function(graphs, c_type) {
           var graph = {};
+          var table_graph = {};
           DataService.getContributions(user, repo).then(function(d){
           var json_res = d;
           var title = "Total Contributions";
           var type = c_type || "pie";
+          var table_data = [];
+          var table_series = [];
+          var table_labels = ["Member", "Commits", "Deletions", "Insertions"];
+          for (i = 0; i < json_res.contributions.length; i++) {
+            var table_entry = [];
+            table_entry.push(json_res.contributions[i].member);
+            table_entry.push(json_res.contributions[i].commits);
+            table_entry.push(json_res.contributions[i].deletions);
+            table_entry.push(json_res.contributions[i].insertions);
+            table_data.push(table_entry);
+          }
+          
+          table_graph.content = ChartFactory.createDataTable(title, table_data, table_labels, table_series, false);
+          table_graph.tab = 0;
+          graphs.push(table_graph);
+
           var data = [];
           var series = ["Commits", "Deletions", "Insertions"];
           var labels = [];
@@ -35,11 +52,14 @@ function Repository(user, repo, title, ChartFactory, DataService) {
           data.push(commits);
           data.push(deletions);
           data.push(insertions);
-          graph.content = ChartFactory.createChart(title, data, labels, series, type, true);
+
+          graph.content = ChartFactory.createChart("", data, labels, series, type, true);
           graph.tab = 0;
           graphs.push(graph);
+
           }); 
       }
+
 
       this.loadFinalLinesGraph = function(graphs, c_type) {
           var graph = {};
