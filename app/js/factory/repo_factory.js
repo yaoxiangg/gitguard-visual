@@ -63,10 +63,24 @@ function Repository(user, repo, title, ChartFactory, DataService) {
 
       this.loadFinalLinesGraph = function(graphs, c_type) {
           var graph = {};
+          var table_graph = {};
           DataService.getLinesFinal(user, repo).then(function(d){
           var json_res = d;
           var title = "Total Lines (Final)";
           var type = c_type || "pie";
+          var table_data = [];
+          var table_series = [];
+          var table_labels = ["Member", "Lines"];
+          for (i = 0; i < json_res.length; i++) {
+            var table_entry = [];
+            table_entry.push(json_res[i].name);
+            table_entry.push(json_res[i].lines);
+            table_data.push(table_entry);
+          }
+          
+          table_graph.content = ChartFactory.createDataTable(title, table_data, table_labels, table_series, false);
+          table_graph.tab = 3;
+
           var data = [];
           var series = ["Lines"];
           var labels = [];
@@ -81,6 +95,7 @@ function Repository(user, repo, title, ChartFactory, DataService) {
           graph.content.options = {legend: {display: false}};
           graph.tab = 3;
           graphs.push(graph);
+          graphs.push(table_graph);
           }); 
       }
 
