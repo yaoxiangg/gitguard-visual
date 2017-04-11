@@ -1,4 +1,5 @@
 <div class="content" ng-controller="ContentController">
+  <!-- URL Input Bar -->
   <div class="row">
     <div class="col-12 col-sm-9 col-lg-10">
       <div class="p+ pt0">
@@ -13,6 +14,8 @@
       </div>
     </div>
   </div>
+  <!-- End of URL Input Bar -->
+  <!-- Intro Content -->
   <div class="intro" ng-if="repositories.length <= 0">
     <div class="p+">
       <p class="intro-header">How to Use?</p>
@@ -20,68 +23,79 @@
       <lx-icon lx-id="numeric-2-box" lx-size="xl" lx-color="grey" lx-type="flat"></lx-icon><span class="intro-text">Play around with the Visualizations</span>
     </div>
   </div>
+  <!-- End of Intro Content -->
+  <!-- Main Contents -->
   <div class="row">
-  <div class="col-2">
-    <br/>
-    <br/>
-    <br/>
-    <lx-tabs lx-indicator="none" lx-color="black" class="sidebar" lx-theme="dark" ng-if="repositories.length > 0" lx-active-tab="activeSideTab" ng-click="updateSideTab(activeSideTab)">
-      <lx-tab class="sidebar-tab" lx-icon={{icon}} ng-repeat="option in options" lx-label={{option}}>
-      </lx-tab>
-    </lx-tabs>
-  </div>
-  <div class="col-10">
-  <lx-tabs lx-color="black" lx-theme="dark" ng-if="repositories.length > 0" lx-active-tab="activeTab">
-    <lx-tab class="chart-tab" lx-icon="chart-areaspline" ng-repeat="repo in repositories" lx-label={{repo.title}}>
-      <div class="graphs">
-        <div class="graph-loader" ng-if="repo.graphs.length <= 0">
-            <lx-progress lx-color="white" lx-type="circular" lx-diameter="100"></lx-progress>
-        </div>
-        <div class="graph-container" ng-repeat="graph in repo.graphs">
-          <div class="graph" ng-if="$parent.activeSideTab == graph.tab">
-            <lx-date-picker ng-if="graph.hasStartDate" ng-model="graph.startdate"
-                    lx-input-format="LL"
-                    lx-locale="en">
-              <lx-text-field lx-theme="dark" lx-allow-clear="true" lx-label="Pick a Start Date">
-                <input type="text" ng-model="graph.startdate">
-              </lx-text-field>
-            </lx-date-picker>
-            <lx-date-picker ng-if="graph.hasEndDate" lx-theme="dark" ng-model="graph.enddate"
-                    lx-input-format="LL"
-                    lx-locale="en">
-              <lx-text-field lx-allow-clear="true" lx-theme="dark" lx-label="Pick an End Date">
-                <input type="text" ng-model="graph.enddate">
-              </lx-text-field>
-            </lx-date-picker>
-            <lx-text-field lx-theme="dark" ng-if="graph.hasFileName == 1" lx-allow-clear="true" lx-label="Enter file path from root directory">
-              <input type="text" ng-model="graph.filepath">
-            </lx-text-field>
-            <lx-text-field lx-theme="dark" ng-if="graph.hasFileName == 1" lx-allow-clear="true" lx-label="Enter Start Line">
-              <input type="number" ng-model="graph.startline">
-            </lx-text-field>
-            <lx-text-field lx-theme="dark" ng-if="graph.hasFileName == 1" lx-allow-clear="true" lx-label="Enter End Line">
-              <input type="number" ng-model="graph.endline">
-            </lx-text-field>
-            <div class="btn-update-chart" ng-if="graph.hasStartDate == 1 || graph.hasEndDate == 1 || graph.hasUpdateChart == 1">
-              <lx-button lx-color="white" lx-type="flat" ng-click="graph.refresh()">Update Chart</lx-button>
+    <!-- Side Bar -->
+    <div class="col-2">
+      <br/>
+      <br/>
+      <br/>
+      <lx-tabs lx-indicator="none" lx-color="black" class="sidebar" lx-theme="dark" ng-if="repositories.length > 0" lx-active-tab="activeSideTab" ng-click="updateSideTab(activeSideTab)">
+        <lx-tab class="sidebar-tab" lx-icon={{icon}} ng-repeat="option in options" lx-label={{option}}></lx-tab>
+      </lx-tabs>
+    </div>
+    <!-- Repository Graphs Container -->
+    <div class="col-10">
+      <lx-tabs lx-color="black" lx-theme="dark" ng-if="repositories.length > 0" lx-active-tab="activeTab">
+        <lx-tab class="chart-tab" lx-icon="chart-areaspline" ng-repeat="repo in repositories" lx-label={{repo.title}}>
+          <div class="graphs">
+            <div class="graph-loader" ng-if="repo.graphs.length <= 5">
+              <lx-progress lx-color="white" lx-type="circular" lx-diameter="100"></lx-progress>
             </div>
-	    <div class="graph-title">{{graph.content.title}}</div>
-            <canvas class="chart chart-base" ng-if="!graph.content.is_table" chart-type="graph.content.chart_type" chart-options=graph.content.options chart-data=graph.content.data chart-labels=graph.content.labels chart-series=graph.content.series chart-click="onClick"></canvas> 
-            <div class="graph-table" ng-if="graph.content.is_table">
-              <table class="table table-dark">
-                <thead><tr><th ng-repeat="label in graph.content.labels">{{label}}</th></tr></thead>
-                <tbody><tr ng-repeat="data in graph.content.data"><td ng-repeat="cell in data track by $index">{{cell}}</td></tr></tbody>
-              </table>
-            </div>
-          </div>
-          <div class="legends-box" ng-if="graph.content.show_legend && $parent.activeSideTab == graph.tab">
-            <label class="checkbox-inline" ng-repeat="legend in graph.content.actual_series"><input ng-click="graph.content.toggleSeries($index)" ng-model=graph.content.legend_status[$index] class="checkbox-label" type="checkbox" value="">{{legend}}</label>
-          </div>
-        </div>
-      </div>
-    </lx-tab>
-  </lx-tabs>
+            <div class="graph-container" ng-repeat="graph in repo.graphs">
+              <div class="graph" ng-if="$parent.activeSideTab == graph.tab">
+
+                <!-- Various Input Fields -->
+                <lx-date-picker ng-if="graph.hasStartDate" ng-model="graph.startdate" lx-input-format="LL" lx-locale="en">
+                  <lx-text-field lx-theme="dark" lx-allow-clear="true" lx-label="Pick a Start Date">
+                    <input type="text" ng-model="graph.startdate">
+                  </lx-text-field>
+                </lx-date-picker>
+                <lx-date-picker ng-if="graph.hasEndDate" lx-theme="dark" ng-model="graph.enddate" lx-input-format="LL" lx-locale="en">
+                  <lx-text-field lx-allow-clear="true" lx-theme="dark" lx-label="Pick an End Date">
+                    <input type="text" ng-model="graph.enddate">
+                  </lx-text-field>
+                </lx-date-picker>
+                <lx-text-field lx-theme="dark" ng-if="graph.hasMember == 1" lx-allow-clear="true" lx-label="Member">
+                  <input type="text" ng-model="graph.member">
+                </lx-text-field>
+                <lx-text-field lx-theme="dark" ng-if="graph.hasFileName == 1" lx-allow-clear="true" lx-label="Enter file path from root directory">
+                  <input type="text" ng-model="graph.filepath">
+                </lx-text-field>
+                <lx-text-field lx-theme="dark" ng-if="graph.hasFileName == 1" lx-allow-clear="true" lx-label="Enter Start Line">
+                  <input type="number" ng-model="graph.startline">
+                </lx-text-field>
+                <lx-text-field lx-theme="dark" ng-if="graph.hasFileName == 1" lx-allow-clear="true" lx-label="Enter End Line">
+                  <input type="number" ng-model="graph.endline">
+                </lx-text-field>
+                <div class="btn-update-chart" ng-if="graph.hasStartDate == 1 || graph.hasEndDate == 1 || graph.hasUpdateChart == 1">
+                  <lx-button lx-color="white" lx-type="flat" ng-disabled="graph.lockUpdate == 1" ng-click="graph.refresh()">Update Chart</lx-button>
+                </div>
+                <!-- End of Input Fields -->
+
+                <!-- Graphs Rendering -->
+	        <div class="graph-title">{{graph.content.title}}</div>
+                <canvas class="chart chart-base" ng-if="!graph.content.is_table" chart-type="graph.content.chart_type" chart-options=graph.content.options chart-data=graph.content.data chart-labels=graph.content.labels chart-series=graph.content.series chart-click="onClick"></canvas> 
+                <div class="graph-table" ng-if="graph.content.is_table">
+                  <table class="table table-dark">
+                    <thead><tr><th ng-repeat="label in graph.content.labels">{{label}}</th></tr></thead>
+                    <tbody><tr ng-repeat="data in graph.content.data"><td ng-repeat="cell in data track by $index">{{cell}}</td></tr></tbody>
+                  </table>
+                </div>
+                <!-- End of Rendering -->
+              </div>
+              <!-- Show Graph Legend Rendering -->
+              <div class="legends-box" ng-if="graph.content.show_legend && $parent.activeSideTab == graph.tab">
+                <label class="checkbox-inline" ng-repeat="legend in graph.content.actual_series"><input ng-click="graph.content.toggleSeries($index)" ng-model=graph.content.legend_status[$index] class="checkbox-label" type="checkbox" value="">{{legend}}</label>
+              </div>
+              <!-- End Graph Legend -->
+             </div>
+           </div>
+        </lx-tab>
+      </lx-tabs>
+    </div>
   </div>
-  </div>
+  <!-- End of Main Contents -->
 </div>
 
