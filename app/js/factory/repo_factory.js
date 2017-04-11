@@ -189,7 +189,7 @@ function Repository(user, repo, title, ChartFactory, DataService) {
                 if (json_res.history[i].member in commitCountDict) {
                   commitCountDict[json_res.history[i].member] += 1;
                 } else {
-                  commitCountDict[json_res.history[i].member] = 0;
+                  commitCountDict[json_res.history[i].member] = 1;
                 }
               }
               for (key in commitCountDict) {
