@@ -35,9 +35,9 @@ var app = angular.module('GitGuardApp', [
 
 //Helper functions
 function get_user_repo_from_url(uri) {
-  var breakdown = uri.match(/^((https|http):\/\/)*(www\.)*github.com\/[a-zA-Z0-9]*\/[a-zA-Z0-9\_\-]*$/);
+  var breakdown = uri.match(/^((https|http):\/\/)*(www\.)*github.com\/[a-zA-Z0-9]*\/[a-zA-Z0-9\_\-\.]*$/);
   if (breakdown) {
-    return uri.match(/[a-zA-Z0-9]*\/[a-zA-Z0-9\_\-]*$/)[0]; 
+    return uri.match(/[a-zA-Z0-9]*\/[a-zA-Z0-9\_\-\.]*$/)[0]; 
   }
   return null;
 }

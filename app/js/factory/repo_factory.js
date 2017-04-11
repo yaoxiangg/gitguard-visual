@@ -150,9 +150,11 @@ function Repository(user, repo, title, ChartFactory, DataService) {
       }
 
       this.loadFileCommitHistoryGraph = function(graphs) {
+          var table_graph = {};
           var graph = {};
-          graph.hasUpdateChart = 1;
+          table_graph.tab = 2;
           graph.tab = 2;
+          graph.hasUpdateChart = 1;
           graph.filepath = "";
           graph.hasFileName = 1;
           graph.lockUpdate = 0;
@@ -160,24 +162,47 @@ function Repository(user, repo, title, ChartFactory, DataService) {
             var fp = graph.filepath;
             var sline = graph.startline;
             var eline = graph.endline;
+            if (fp == null || fp == "") {
+              return;
+            }
             graph.lockUpdate = 1;
             DataService.getFileCommitHistory(user, repo, fp, sline, eline).then(function(d){
               var json_res = d;
 
-              //Create chart
+              //Create table chart
               var title = "Commit History - " + json_res.filename;
+              var table_data = [];
+              var table_series = [];
+              var table_labels = ["Message", "Member"];
+              for (i = 0; i < json_res.history.length; i++) {
+                table_data.push([json_res.history[i].message, json_res.history[i].member]);
+                table_series.push("Commit " + i);
+              }
+              table_graph.content = ChartFactory.createDataTable(title, table_data, table_labels, table_series, false);
+
+              //Create chart
               var data = [];
               var series = [];
-              var labels = ["Message", "Member"];
+              var labels = [];
+              var commitCountDict = {};
               for (i = 0; i < json_res.history.length; i++) {
-                data.push([json_res.history[i].message, json_res.history[i].member]);
-                series.push("Commit " + i);
+                if (json_res.history[i].member in commitCountDict) {
+                  commitCountDict[json_res.history[i].member] += 1;
+                } else {
+                  commitCountDict[json_res.history[i].member] = 0;
+                }
               }
-              graph.content = ChartFactory.createDataTable(title, data, labels, series, false);
+              for (key in commitCountDict) {
+                data.push(commitCountDict[key]);
+                labels.push(key);
+              }
+              graph.content = ChartFactory.createChart(title, data, labels, series, "pie", false);
+              graph.content.show_legend = 0;
               graph.lockUpdate = 0;
             });
           };
           graphs.push(graph);
+          graphs.push(table_graph);
       }
 
       this.loadGraphs = function() {

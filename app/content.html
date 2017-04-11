@@ -43,7 +43,7 @@
             <div class="graph-loader" ng-if="repo.graphs.length <= 5">
               <lx-progress lx-color="white" lx-type="circular" lx-diameter="100"></lx-progress>
             </div>
-            <div class="graph-container" ng-repeat="graph in repo.graphs">
+            <div class="graph-container" ng-hide="repo.graphs.length <= 5" ng-repeat="graph in repo.graphs">
               <div class="graph" ng-if="$parent.activeSideTab == graph.tab">
 
                 <!-- Various Input Fields -->
