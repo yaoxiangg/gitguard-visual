@@ -1,5 +1,21 @@
-app.service('DataService', function($http) {
+app.service('DataService', function($http, $q) {
   var api_url = "http://localhost:8080";
+  this.checkRepoExistence = function (user_data, repo_data) {
+    var parameters = {
+      user: user_data,
+      repo: repo_data
+    };
+    var config = {
+      params: parameters
+    };
+    return $http.get(api_url + '/isRepoValid', config)
+    .then(function(res) {
+      return res.data;
+    },
+    function(res) {
+      return $q.resolve();
+    });
+  };
   this.getContributions = function (user_data, repo_data) {
     var parameters = {
       user: user_data,
@@ -11,6 +27,9 @@ app.service('DataService', function($http) {
     return $http.get(api_url + '/getcontributions', config)
     .then(function(res) {
       return res.data;
+    },
+    function(res) {
+      return $q.resolve();
     });
   };
   this.getLinesFinal = function (user_data, repo_data) {
@@ -24,6 +43,9 @@ app.service('DataService', function($http) {
     return $http.get(api_url + '/getlinesfinal', config)
     .then(function(res) {
       return res.data;
+    },
+    function(res) {
+      return $q.resolve();
     });
   };
   this.getTeamCommitHistory = function (user_data, repo_data, member, interval, datestart, dateend) {
@@ -49,6 +71,9 @@ app.service('DataService', function($http) {
     return $http.get(api_url + '/getteamcommithistory', config)
       .then(function(res) {
         return res.data;
+      },
+      function(res) {
+        return $q.resolve();
       });
   };
   this.getFileCommitHistory = function (user_data, repo_data, filename, startline, endline) {
@@ -71,6 +96,9 @@ app.service('DataService', function($http) {
     return $http.get(api_url + '/getfilecommithistory', config)
     .then(function(res) {
       return res.data;
+    },
+    function(res) {
+      return $q.resolve();
     });
   };
 });

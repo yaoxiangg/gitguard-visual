@@ -18,6 +18,9 @@ function Repository(user, repo, title, ChartFactory, DataService) {
           var graph = {};
           var table_graph = {};
           DataService.getContributions(user, repo).then(function(d){
+            if (d == null) {
+              return;
+            }
             var json_res = d;
             var title = "Total Contributions";
             var type = c_type || "pie";
@@ -67,6 +70,9 @@ function Repository(user, repo, title, ChartFactory, DataService) {
           var graph = {};
           var table_graph = {};
           DataService.getLinesFinal(user, repo).then(function(d){
+            if (d == null) {
+              return;
+            }
             var json_res = d;
             var title = "Total Lines (Final)";
             var type = c_type || "pie";
@@ -131,6 +137,9 @@ function Repository(user, repo, title, ChartFactory, DataService) {
               member = graph.member;
             }
             DataService.getTeamCommitHistory(user, repo, member, interval, datestart, dateend).then(function(d){
+              if (d == null) {
+                return;
+              }
               var json_res = d;
               var title = "Team Commit History";
 
@@ -167,6 +176,9 @@ function Repository(user, repo, title, ChartFactory, DataService) {
             }
             graph.lockUpdate = 1;
             DataService.getFileCommitHistory(user, repo, fp, sline, eline).then(function(d){
+              if (d == null) {
+                return;
+              }
               var json_res = d;
 
               //Create table chart

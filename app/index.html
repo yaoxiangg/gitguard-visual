@@ -15,6 +15,7 @@
   </head>
   <body ng-app="GitGuardApp">
     <div ng-controller="LayoutController">
+      <lx-progress lx-type="linear" lx-color="white" ng-if="validating"></lx-progress>
       <div ng-include="'header.html'"></div>
       <div ng-include="'content.html'"></div>
       <div ng-include="'footer.html'"></div>
