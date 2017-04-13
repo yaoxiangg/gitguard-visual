@@ -24,6 +24,14 @@ var app = angular.module('GitGuardApp', [
             fontColor: "#CCC"
           }
         }]
+      },
+      pan: {
+        enabled: true,
+        mode: 'xy'
+      },
+      zoom: {
+        enabled: true,
+        mode: 'xy',
       }
     });
     ChartJsProvider.setOptions('pie', {
