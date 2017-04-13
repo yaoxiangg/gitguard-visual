@@ -56,7 +56,7 @@ function Repository(user, repo, title, ChartFactory, DataService) {
             data.push(deletions);
             data.push(insertions);
 
-            graph.content = ChartFactory.createChart("", data, labels, series, type, true);
+            graph.content = ChartFactory.createChart(title, data, labels, series, type, true);
             graph.tab = 0;
 
             //Add to graphs
