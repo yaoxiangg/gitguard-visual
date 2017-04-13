@@ -120,8 +120,11 @@ function Repository(user, repo, title, ChartFactory, DataService) {
           graph.hasStartDate = 1;
           graph.hasEndDate = 1;
           graph.hasMember = 1;
+          graph.hasAddMemberBtn = 0;
           graph.init = 0;
           graph.lockUpdate = 0;
+          graph.last_startdate = "";
+          graph.last_enddate = "";
           graphs.push(graph);
 
           graph.refresh = function(add) {
@@ -136,6 +139,8 @@ function Repository(user, repo, title, ChartFactory, DataService) {
             } else {
               member = graph.member;
             }
+            graph.last_startdate = datestart;
+            graph.last_enddate = dateend;
             DataService.getTeamCommitHistory(user, repo, member, interval, datestart, dateend).then(function(d){
               if (d == null) {
                 return;
@@ -150,9 +155,37 @@ function Repository(user, repo, title, ChartFactory, DataService) {
               for (i = 0; i < json_res.history.length; i++) {
                 series.push(json_res.history[i].member);
                 data.push(json_res.history[i].commits);
+                graph.hasAddMemberBtn = 1;
               }
               graph.content = ChartFactory.createChart(title, data, labels, series, "bar", false);
               graph.content.show_legend = 0;
+              graph.last_startdate = datestart;
+              graph.last_enddate = dateend;
+              graph.lockUpdate = 0;
+            });
+          };
+
+          graph.addMember = function() {
+            if (graph.member == "") {
+              member = null;
+              return;
+            } else {
+              member = graph.member;
+            }
+            graph.lockUpdate = 1;
+            DataService.getTeamCommitHistory(user, repo, member, interval, graph.last_startdate, graph.last_enddate).then(function(d){
+              if (d == null) {
+                return;
+              }
+              var json_res = d;
+              var data = [];
+              var series = [];
+              for (i = 0; i < json_res.history.length; i++) {
+                if ($.inArray(json_res.history[i].member, graph.content.series) < 0) {
+                  graph.content.series.push(json_res.history[i].member);
+                  graph.content.data.push(json_res.history[i].commits);
+                }
+              }
               graph.lockUpdate = 0;
             });
           };
