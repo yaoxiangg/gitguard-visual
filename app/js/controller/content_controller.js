@@ -28,6 +28,7 @@ app.controller('ContentController', function($scope, LxNotificationService, Repo
         $scope.showError('Please enter a valid Git Repository URL!');
         return;
       }
+      $scope.git_repo_uri = "";
       $scope.attemptCreateRepository(user, repo);
     } else {
       $scope.showError('Please enter a valid Git Repository URL!');
